@@ -16,7 +16,7 @@
 
 #include <stdio.h>
 #include <IO.h>
-#include "../inc/function.h"
+#include "function.h"
 #include "sys/alt_irq.h"
 
 //变量
@@ -43,8 +43,8 @@ static void init_button_pio(void)//同时需要注意若是在SOPC Builder中选择了enable 
 
     IOWR_ALTERA_AVALON_PIO_IRQ_MASK(KEY0_BASE, 1);//使能按键KEY0中断
 	IOWR_ALTERA_AVALON_PIO_IRQ_MASK(KEY1_BASE, 1);//使能按键KEY1中断
-	IOWR_ALTERA_AVALON_PIO_IRQ_MASK(KEY2_BASE, 1);//使能PAUSE中断
-	IOWR_ALTERA_AVALON_PIO_IRQ_MASK(KEY2_BASE, 1);//使能RESET中断
+	IOWR_ALTERA_AVALON_PIO_IRQ_MASK(KEY2_BASE, 1);//使能按键KEY2中断
+	IOWR_ALTERA_AVALON_PIO_IRQ_MASK(KEY2_BASE, 1);//使能按键KEY3中断
 
 	IOWR_ALTERA_AVALON_PIO_EDGE_CAP(KEY0_BASE,KEY0_BIT_CLEARING_EDGE_REGISTER);//清中断边缘捕获寄存器
 	IOWR_ALTERA_AVALON_PIO_EDGE_CAP(KEY1_BASE,KEY1_BIT_CLEARING_EDGE_REGISTER);//清中断缘捕获寄存器
@@ -52,13 +52,14 @@ static void init_button_pio(void)//同时需要注意若是在SOPC Builder中选择了enable 
 	IOWR_ALTERA_AVALON_PIO_EDGE_CAP(KEY3_BASE,KEY3_BIT_CLEARING_EDGE_REGISTER);//清中断边缘捕获寄存器
 
 	alt_ic_isr_register(KEY0_IRQ_INTERRUPT_CONTROLLER_ID,//中断控制器标号
-    		                                 KEY0_IRQ,//硬件中断号
-    		                          Key0_Interrupt,//中断服务子函数
-    		                         Edge_Capture_ptr0,//指向与设备驱动实例相关的数据结构体
-    		                                     0x0);//flags,保留未用（注册中断）
+											   KEY0_IRQ,//硬件中断号
+										Key0_Interrupt,//中断服务子函数
+    		                        Edge_Capture_ptr0,//指向与设备驱动实例相关的数据结构体
+    		                                    0x0);//flags,保留未用
+													//（注册中断）
 	alt_ic_isr_register(KEY1_IRQ_INTERRUPT_CONTROLLER_ID,KEY1_IRQ,Key1_Interrupt,Edge_Capture_ptr1,0x0); //注册中断
-	alt_ic_isr_register(KEY1_IRQ_INTERRUPT_CONTROLLER_ID,KEY1_IRQ,Key2_Interrupt,Edge_Capture_ptr1,0x0); //注册中断
-	alt_ic_isr_register(KEY1_IRQ_INTERRUPT_CONTROLLER_ID,KEY1_IRQ,Key3_Interrupt,Edge_Capture_ptr1,0x0); //注册中断
+	alt_ic_isr_register(KEY2_IRQ_INTERRUPT_CONTROLLER_ID,KEY2_IRQ,Key2_Interrupt,Edge_Capture_ptr2,0x0); //注册中断
+	alt_ic_isr_register(KEY3_IRQ_INTERRUPT_CONTROLLER_ID,KEY3_IRQ,Key3_Interrupt,Edge_Capture_ptr3,0x0); //注册中断
 }
 int main()
 {
